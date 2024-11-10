@@ -2,7 +2,7 @@
 
 <template>
   <div class="home-content">
-    <div>content</div>
+    <div class="button">content</div>
   </div>
 </template>
 
