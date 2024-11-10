@@ -1,35 +1,74 @@
 <script setup lang="ts">
+import { defineProps, onMounted, ref } from "vue";
 const { post } = defineProps(["post"]);
 const id = `droplet-${post.id}`;
+
+// TODO create emits for velocity to be passed to cloud's array of droplets
+// We then check the array for collisions with other droplets and adjust velocity accordingly
+
+// TODO mass of droplet to be used in collision calculations
+// calculate mass based on length of post content
 
 // random num 1-10 to determine delay for droplet display
 const delay = Math.floor(Math.random() * 10000) + 1000;
 
-// random position on screen
-const x = Math.floor(Math.random() * 100);
-const y = Math.floor(Math.random() * 100);
+const SPEED = 2;
+const parentContainer = ref(null);
+let containerWidth = 0;
+let containerHeight = 0;
+let dropletWidth = 0;
+let dropletHeight = 0;
 
-// random initial velocity
-const vx = Math.floor(Math.random() * 10) - 5;
-const vy = Math.floor(Math.random() * 10) - 5;
+// Initial position in pixels
+let currentX = 0;
+let currentY = 0;
+let vx = (Math.random() - 0.5) * SPEED;
+let vy = (Math.random() - 0.5) * SPEED;
 
-// layer (1, 2, or 3) to determine z-index
-const layer = Math.floor(Math.random() * 3) + 1;
-
-// show droplet after delay
-setTimeout(() => {
+onMounted(() => {
+  const container = document.querySelector(".cloud-container");
   const droplet = document.getElementById(id);
-  if (!droplet) return;
-  droplet.style.left = `${x}%`;
-  droplet.style.top = `${y}%`;
-  droplet.classList.remove("hidden");
-  droplet.classList.add("fade-in");
-  console.log(
-    `Droplet ${id} displayed after ${
-      delay / 1000
-    } seconds; x: ${x}, y: ${y}; vx: ${vx}, vy: ${vy}`
-  );
-}, delay);
+  if (!container || !droplet) return;
+
+  containerWidth = container.clientWidth;
+  containerHeight = container.clientHeight;
+  dropletWidth = droplet.offsetWidth;
+  dropletHeight = droplet.offsetHeight;
+
+  // Random starting position within container bounds
+  currentX = Math.floor(Math.random() * (containerWidth - dropletWidth));
+  currentY = Math.floor(Math.random() * (containerHeight - dropletHeight));
+
+  // Initial position
+  setTimeout(() => {
+    if (!droplet) return;
+    droplet.style.left = `${currentX}px`;
+    droplet.style.top = `${currentY}px`;
+    droplet.classList.remove("hidden");
+    droplet.classList.add("fade-in");
+  }, delay);
+
+  // Movement loop
+  setInterval(() => {
+    if (!droplet) return;
+
+    // Bounce off walls
+    if (currentX <= 0 || currentX >= containerWidth - dropletWidth) {
+      vx *= -1;
+    }
+    if (currentY <= 0 || currentY >= containerHeight - dropletHeight) {
+      vy *= -1;
+    }
+
+    // Update position
+    currentX += vx;
+    currentY += vy;
+
+    // Apply new position
+    droplet.style.left = `${currentX}px`;
+    droplet.style.top = `${currentY}px`;
+  }, 1000 / 60);
+});
 </script>
 
 <template>
