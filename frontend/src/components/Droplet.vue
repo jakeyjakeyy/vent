@@ -19,7 +19,6 @@ let containerHeight = 0;
 let dropletWidth = 0;
 let dropletHeight = 0;
 
-// Initial position in pixels
 let currentX = 0;
 let currentY = 0;
 let vx = (Math.random() - 0.5) * SPEED;
@@ -30,15 +29,6 @@ onMounted(() => {
   const droplet = document.getElementById(id);
   if (!container || !droplet) return;
 
-  containerWidth = container.clientWidth;
-  containerHeight = container.clientHeight;
-  dropletWidth = droplet.offsetWidth;
-  dropletHeight = droplet.offsetHeight;
-
-  // Random starting position within container bounds
-  currentX = Math.floor(Math.random() * (containerWidth - dropletWidth));
-  currentY = Math.floor(Math.random() * (containerHeight - dropletHeight));
-
   // Initial position
   setTimeout(() => {
     if (!droplet) return;
@@ -46,6 +36,14 @@ onMounted(() => {
     droplet.style.top = `${currentY}px`;
     droplet.classList.remove("hidden");
     droplet.classList.add("fade-in");
+
+    containerWidth = container.clientWidth;
+    containerHeight = container.clientHeight;
+    dropletWidth = droplet.clientWidth;
+    dropletHeight = droplet.clientHeight;
+    // Random starting position within container bounds
+    currentX = Math.floor(Math.random() * (containerWidth - dropletWidth));
+    currentY = Math.floor(Math.random() * (containerHeight - dropletHeight));
   }, delay);
 
   // Movement loop
