@@ -1,18 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Droplet from "./Droplet.vue";
-
-type Droplet = {
-  content: string;
-  id: number;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  mass: number;
-  dropletWidth: number;
-  dropletHeight: number;
-};
+import type { droplet } from "@/types";
+import { twoDimensionalCollision } from "@/utils/collision";
 
 let posts = ref([
   {
@@ -61,7 +51,7 @@ let posts = ref([
   },
 ]);
 
-function updatePost(updatedDroplet: Droplet) {
+function updatePost(updatedDroplet: droplet) {
   const index = posts.value.findIndex((post) => post.id === updatedDroplet.id);
   posts.value[index] = updatedDroplet;
 
@@ -69,35 +59,18 @@ function updatePost(updatedDroplet: Droplet) {
   for (const post of posts.value) {
     if (post.id === updatedDroplet.id) continue;
 
-    // Calculate overlaps
-    const overlapX = Math.min(
-      updatedDroplet.x + updatedDroplet.dropletWidth - post.x,
-      post.x + post.dropletWidth - updatedDroplet.x
-    );
-
-    const overlapY = Math.min(
-      updatedDroplet.y + updatedDroplet.dropletHeight - post.y,
-      post.y + post.dropletHeight - updatedDroplet.y
-    );
-
-    // Check if there's a collision
-    if (overlapX > 0 && overlapY > 0) {
-      console.log("Collision detected");
-
-      // Determine which axis had the more significant collision
-      if (overlapX < overlapY) {
-        // X-axis collision
-        console.log("X collision");
-        updatedDroplet.vx *= -1;
-        post.vx *= -1;
-      } else {
-        // Y-axis collision
-        console.log("Y collision");
-        updatedDroplet.vy *= -1;
-        post.vy *= -1;
-      }
-      posts.value[index] = updatedDroplet;
-      posts.value[posts.value.findIndex((p) => p.id === post.id)] = post;
+    // Check for collisions
+    if (post.id === updatedDroplet.id) continue;
+    if (
+      updatedDroplet.x < post.x + post.dropletWidth &&
+      updatedDroplet.x + updatedDroplet.dropletWidth > post.x &&
+      updatedDroplet.y < post.y + post.dropletHeight &&
+      updatedDroplet.y + updatedDroplet.dropletHeight > post.y
+    ) {
+      // Calculate new velocities
+      const vels = twoDimensionalCollision(updatedDroplet, post);
+      posts.value[index] = vels[0];
+      posts.value[posts.value.findIndex((p) => p.id === post.id)] = vels[1];
     }
   }
 }
