@@ -70,6 +70,8 @@ onMounted(() => {
   // Movement loop
   setInterval(() => {
     if (!droplet) return;
+    vx = post.vx === 0 ? vx : post.vx;
+    vy = post.vy === 0 ? vy : post.vy;
 
     // Bounce off walls
     if (currentX <= 0 || currentX >= containerWidth - dropletWidth) {
