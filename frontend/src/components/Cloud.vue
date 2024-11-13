@@ -1,92 +1,71 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import DropletComponent from "./DropletComponent.vue";
 import Droplet from "@/classes/droplet";
-import type { droplet } from "@/types";
-import { twoDimensionalCollision } from "@/utils/collision";
+import { isColliding } from "@/utils/collision";
 
+let droplets = ref<Droplet[]>([]);
 let posts = ref([
   {
     content: "Hello, World!",
     id: 1,
-    x: 0,
-    y: 0,
-    vx: 0,
-    vy: 0,
-    mass: 0,
-    dropletWidth: 0,
-    dropletHeight: 0,
   },
-  {
-    content: "Hello, Vue!",
-    id: 2,
-    x: 0,
-    y: 0,
-    vx: 0,
-    vy: 0,
-    mass: 0,
-    dropletWidth: 0,
-    dropletHeight: 0,
-  },
-  {
-    content: "Hello, vent!",
-    id: 3,
-    x: 0,
-    y: 0,
-    vx: 0,
-    vy: 0,
-    mass: 0,
-    dropletWidth: 0,
-    dropletHeight: 0,
-  },
+  // {
+  //   content: "Hello, Vue!",
+  //   id: 2,
+  // },
+  // {
+  //   content: "Hello, vent!",
+  //   id: 3,
+  // },
   {
     content: "A very long post that is at the limits of our maximum characters",
     id: 4,
-    x: 0,
-    y: 0,
-    vx: 0,
-    vy: 0,
-    mass: 0,
-    dropletWidth: 0,
-    dropletHeight: 0,
   },
 ]);
 
-console.log(new Droplet("Hello, World!", 1));
-
-function updatePost(updatedDroplet: droplet) {
-  const index = posts.value.findIndex((post) => post.id === updatedDroplet.id);
-  posts.value[index] = updatedDroplet;
-
-  // Check for collisions
+onMounted(() => {
+  let container = document.querySelector(".cloud-container") as HTMLElement;
   for (const post of posts.value) {
-    if (post.id === updatedDroplet.id) continue;
+    droplets.value.push(new Droplet(post.content, post.id, container));
+  }
+});
 
-    // Check for collisions
-    if (post.id === updatedDroplet.id) continue;
-    if (
-      updatedDroplet.x < post.x + post.dropletWidth &&
-      updatedDroplet.x + updatedDroplet.dropletWidth > post.x &&
-      updatedDroplet.y < post.y + post.dropletHeight &&
-      updatedDroplet.y + updatedDroplet.dropletHeight > post.y
-    ) {
-      // Calculate new velocities
-      const vels = twoDimensionalCollision(updatedDroplet, post);
-      posts.value[index] = vels[0];
-      posts.value[posts.value.findIndex((p) => p.id === post.id)] = vels[1];
+// Check Collision Controller
+setInterval(() => {
+  for (let i = 0; i < droplets.value.length; i++) {
+    for (let j = i + 1; j < droplets.value.length; j++) {
+      if (isColliding(droplets.value[i], droplets.value[j])) {
+        console.log(droplets.value[i], droplets.value[j]);
+        let updated = droplets.value[i].collide(droplets.value[j]);
+        droplets.value[i] = updated[0];
+        droplets.value[j] = updated[1];
+        console.log(droplets.value[i], droplets.value[j]);
+      }
     }
   }
-}
+
+  for (let i = 0; i < droplets.value.length; i++) {
+    const dropletElement = document.getElementById(
+      `droplet-${droplets.value[i].id}`
+    ) as HTMLElement;
+    if (!dropletElement) {
+      continue;
+    }
+    droplets.value[i].update();
+    dropletElement.style.left = `${droplets.value[i].position.x}px`;
+    dropletElement.style.top = `${droplets.value[i].position.y}px`;
+  }
+}, 1000);
 </script>
 
 <template>
   <div class="cloud-container">
     <DropletComponent
-      v-for="post in posts"
+      v-for="post in droplets"
       :key="post.id"
-      :post="post"
+      :droplet="post"
       :posts="posts"
-      @update="updatePost"
     />
   </div>
 </template>
@@ -94,7 +73,7 @@ function updatePost(updatedDroplet: droplet) {
 <style scoped>
 .cloud-container {
   position: relative;
-  width: 25%;
-  height: 25%;
+  width: 30%;
+  height: 30%;
 }
 </style>
