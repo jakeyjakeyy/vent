@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Droplet from "./Droplet.vue";
+import DropletComponent from "./DropletComponent.vue";
+import Droplet from "@/classes/droplet";
 import type { droplet } from "@/types";
 import { twoDimensionalCollision } from "@/utils/collision";
 
@@ -51,6 +52,8 @@ let posts = ref([
   },
 ]);
 
+console.log(new Droplet("Hello, World!", 1));
+
 function updatePost(updatedDroplet: droplet) {
   const index = posts.value.findIndex((post) => post.id === updatedDroplet.id);
   posts.value[index] = updatedDroplet;
@@ -78,7 +81,7 @@ function updatePost(updatedDroplet: droplet) {
 
 <template>
   <div class="cloud-container">
-    <Droplet
+    <DropletComponent
       v-for="post in posts"
       :key="post.id"
       :post="post"
@@ -91,7 +94,7 @@ function updatePost(updatedDroplet: droplet) {
 <style scoped>
 .cloud-container {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 25%;
+  height: 25%;
 }
 </style>

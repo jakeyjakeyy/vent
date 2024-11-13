@@ -66,4 +66,12 @@ function calculateAngle(vx: number, vy: number) {
   return Math.atan2(vy, vx);
 }
 
-export { twoDimensionalCollision };
+function isColliding(r1: droplet, r2: droplet) {
+  return (
+    r1.x < r2.x + r2.dropletWidth &&
+    r1.x + r1.dropletWidth > r2.x &&
+    r1.y < r2.y + r2.dropletHeight &&
+    r1.y + r1.dropletHeight > r2.y
+  );
+}
+export { twoDimensionalCollision, isColliding };

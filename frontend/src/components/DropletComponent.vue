@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps, onMounted, ref } from "vue";
+import { isColliding } from "@/utils/collision";
 const emit = defineEmits(["update"]);
 const { post, posts } = defineProps(["post", "posts"]);
 const id = `droplet-${post.id}`;
@@ -34,7 +35,17 @@ onMounted(() => {
 
   // Initial position
   setTimeout(() => {
-    if (!droplet) return;
+    let colliding = false;
+    do {
+      for (const otherPost of posts) {
+        if (otherPost.id === post.id) continue;
+        if (isColliding(post, otherPost)) {
+          colliding = true;
+          break;
+        }
+      }
+    } while (colliding);
+    if (!droplet || colliding) return;
     droplet.style.left = `${currentX}px`;
     droplet.style.top = `${currentY}px`;
     droplet.classList.remove("hidden");
