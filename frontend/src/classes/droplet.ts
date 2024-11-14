@@ -55,29 +55,46 @@ class Droplet {
 
   collide(other: Droplet) {
     let mSum = this.mass + other.mass;
-    let impact = {
-      x: this.velocity.x - other.velocity.x,
-      y: this.velocity.y - other.velocity.y,
+    let x1 = this.position.x + this.dimensions.width / 2;
+    let y1 = this.position.y + this.dimensions.height / 2;
+    let x2 = other.position.x + other.dimensions.width / 2;
+    let y2 = other.position.y + other.dimensions.height / 2;
+    let dSquared = Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
+    let d = Math.sqrt(dSquared);
+
+    let normal = {
+      x: (x2 - x1) / d,
+      y: (y2 - y1) / d,
     };
-    let vDiff = {
+
+    let relativeVelocity = {
       x: other.velocity.x - this.velocity.x,
       y: other.velocity.y - this.velocity.y,
     };
-    let d = Math.sqrt(
-      (this.position.x - other.position.x) ** 2 +
-        (this.position.y - other.position.y) ** 2
-    );
 
-    let numA = 2 * other.mass * (vDiff.x * impact.x + vDiff.y * impact.y);
-    let denA = mSum * d * d;
+    let velocityAlongNormal =
+      relativeVelocity.x * normal.x + relativeVelocity.y * normal.y;
 
-    let deltaV = {
-      x: impact.x * (numA / denA),
-      y: impact.y * (numA / denA),
+    // Do not resolve if velocities are separating
+    if (velocityAlongNormal > 0) {
+      return [this, other];
+    }
+
+    let restitution = 1;
+
+    let impulseScalar =
+      (-(1 + restitution) * velocityAlongNormal) /
+      (1 / this.mass + 1 / other.mass);
+
+    let impulse = {
+      x: impulseScalar * normal.x,
+      y: impulseScalar * normal.y,
     };
 
-    this.velocity.x += deltaV.x;
-    this.velocity.y += deltaV.y;
+    this.velocity.x -= impulse.x / this.mass;
+    this.velocity.y -= impulse.y / this.mass;
+    other.velocity.x += impulse.x / other.mass;
+    other.velocity.y += impulse.y / other.mass;
 
     return [this, other];
   }

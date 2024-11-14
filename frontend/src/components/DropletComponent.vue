@@ -34,12 +34,12 @@ onMounted(() => {
   }, delay);
 });
 // tick
-setInterval(() => {
-  if (!droplet || !dropletElement) return;
-  droplet.update();
-  dropletElement.style.left = `${droplet.position.x}px`;
-  dropletElement.style.top = `${droplet.position.y}px`;
-}, 1000 / 60);
+// setInterval(() => {
+//   if (!droplet || !dropletElement) return;
+//   droplet.update();
+//   dropletElement.style.left = `${droplet.position.x}px`;
+//   dropletElement.style.top = `${droplet.position.y}px`;
+// }, 1000 / 60);
 </script>
 
 <template>

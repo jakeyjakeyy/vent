@@ -10,14 +10,14 @@ let posts = ref([
     content: "Hello, World!",
     id: 1,
   },
-  // {
-  //   content: "Hello, Vue!",
-  //   id: 2,
-  // },
-  // {
-  //   content: "Hello, vent!",
-  //   id: 3,
-  // },
+  {
+    content: "Hello, Vue!",
+    id: 2,
+  },
+  {
+    content: "Hello, vent!",
+    id: 3,
+  },
   {
     content: "A very long post that is at the limits of our maximum characters",
     id: 4,
@@ -36,11 +36,9 @@ setInterval(() => {
   for (let i = 0; i < droplets.value.length; i++) {
     for (let j = i + 1; j < droplets.value.length; j++) {
       if (isColliding(droplets.value[i], droplets.value[j])) {
-        console.log(droplets.value[i], droplets.value[j]);
         let updated = droplets.value[i].collide(droplets.value[j]);
         droplets.value[i] = updated[0];
         droplets.value[j] = updated[1];
-        console.log(droplets.value[i], droplets.value[j]);
       }
     }
   }
@@ -56,7 +54,7 @@ setInterval(() => {
     dropletElement.style.left = `${droplets.value[i].position.x}px`;
     dropletElement.style.top = `${droplets.value[i].position.y}px`;
   }
-}, 1000);
+}, 1000 / 60);
 </script>
 
 <template>
@@ -73,7 +71,7 @@ setInterval(() => {
 <style scoped>
 .cloud-container {
   position: relative;
-  width: 30%;
-  height: 30%;
+  width: 50%;
+  height: 50%;
 }
 </style>
