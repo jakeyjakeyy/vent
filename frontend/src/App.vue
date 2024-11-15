@@ -20,6 +20,5 @@ import { RouterLink, RouterView } from "vue-router";
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 1rem;
 }
 </style>

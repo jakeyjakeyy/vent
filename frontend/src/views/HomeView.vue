@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Cloud from "@/components/Cloud.vue";
+import Universe from "@/components/Universe.vue";
 </script>
 
 <template>
   <div class="home-content">
-    <Cloud />
+    <Universe />
   </div>
 </template>
 
