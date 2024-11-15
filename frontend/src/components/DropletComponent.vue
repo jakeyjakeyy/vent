@@ -8,11 +8,11 @@ const id = `droplet-${droplet.id}`;
 var dropletElement: HTMLElement;
 
 // random num 1-10 to determine delay for droplet display
-const delay = Math.floor(Math.random() * 10) * 1000;
+// const delay = Math.floor(Math.random() * 10) * 1000;
+const delay = 0;
 
 onMounted(() => {
   const container = document.querySelector(".cloud-container") as HTMLElement;
-  console.log(droplet);
   dropletElement = document.getElementById(id) as HTMLElement;
 
   setTimeout(() => {
@@ -22,12 +22,6 @@ onMounted(() => {
     dropletElement.classList.remove("hidden");
     dropletElement.classList.add("fade-in");
 
-    droplet.position.x = Math.floor(
-      Math.random() * (container.clientWidth - dropletElement.clientWidth)
-    );
-    droplet.position.y = Math.floor(
-      Math.random() * (container.clientHeight - dropletElement.clientHeight)
-    );
     // set initial dimensions
     droplet.dimensions.width = dropletElement.clientWidth;
     droplet.dimensions.height = dropletElement.clientHeight;

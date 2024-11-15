@@ -9,25 +9,49 @@ let posts = ref([
   {
     content: "Hello, World!",
     id: 1,
+    position: {
+      x: 10,
+      y: 10,
+    },
+    velocity: {
+      x: 1,
+      y: 0.5,
+    },
   },
   {
-    content: "Hello, Vue!",
+    content: "Hello, World2",
     id: 2,
+    position: {
+      x: 10,
+      y: 200,
+    },
+    velocity: {
+      x: 1,
+      y: -0.5,
+    },
   },
   {
     content: "Hello, vent!",
     id: 3,
   },
-  {
-    content: "A very long post that is at the limits of our maximum characters",
-    id: 4,
-  },
+  // {
+  // content: "A very long post that is at the limits of our maximum characters",
+  // id: 4,
+  // },
 ]);
 
 onMounted(() => {
   let container = document.querySelector(".cloud-container") as HTMLElement;
   for (const post of posts.value) {
-    droplets.value.push(new Droplet(post.content, post.id, container));
+    droplets.value.push(
+      new Droplet(
+        post.content,
+        post.id,
+        container,
+        post.position,
+        post.velocity
+      )
+    );
   }
 });
 

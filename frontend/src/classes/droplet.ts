@@ -13,11 +13,22 @@ class Droplet {
     height: 0,
   };
 
-  constructor(content: string, id: number, container: HTMLElement) {
+  constructor(
+    content: string,
+    id: number,
+    container: HTMLElement,
+    position?: { x: number; y: number },
+    velocity?: { x: number; y: number }
+  ) {
+    console.log(velocity);
     this.content = content;
     this.id = id;
-    this.velocity.x = (Math.random() - 0.5) * this.SPEED;
-    this.velocity.y = (Math.random() - 0.5) * this.SPEED;
+    this.velocity.x = velocity
+      ? velocity.x
+      : (Math.random() - 0.5) * this.SPEED;
+    this.velocity.y = velocity
+      ? velocity.y
+      : (Math.random() - 0.5) * this.SPEED;
     this.velocity.x =
       Math.abs(this.velocity.x) < this.MIN_SPEED
         ? this.MIN_SPEED
@@ -29,19 +40,26 @@ class Droplet {
     this.mass = this.content.length;
     this.containerDimensions.width = container.offsetWidth;
     this.containerDimensions.height = container.offsetHeight;
+
+    this.position.x = position
+      ? position.x
+      : Math.random() * this.containerDimensions.width;
+    this.position.y = position
+      ? position.y
+      : Math.random() * this.containerDimensions.height;
   }
 
   wallsCollision() {
     if (
       this.position.x + this.dimensions.width >=
-        this.containerDimensions.width ||
+        this.containerDimensions.width - 1 ||
       this.position.x <= 0
     ) {
       this.velocity.x = -this.velocity.x;
     }
     if (
       this.position.y + this.dimensions.height >=
-        this.containerDimensions.height ||
+        this.containerDimensions.height - 1 ||
       this.position.y <= 0
     ) {
       this.velocity.y = -this.velocity.y;
