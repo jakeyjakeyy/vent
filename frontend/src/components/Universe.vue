@@ -41,6 +41,12 @@ onMounted(async () => {
     dragEnd.x += dragDelta.x;
     dragEnd.y += dragDelta.y;
   });
+
+  window.addEventListener("resize", () => {
+    if (!canvas || !container.value) return;
+    canvas.width = container.value.clientWidth;
+    canvas.height = container.value.clientHeight;
+  });
 });
 
 // Ticker
