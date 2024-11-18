@@ -33,6 +33,7 @@ onMounted(async () => {
     if (!canvas || !ctx || !dragging) return;
     dragDelta.x = e.offsetX - dragStart.x;
     dragDelta.y = e.offsetY - dragStart.y;
+    console.log(e.offsetX - dragDelta.x, e.offsetY - dragDelta.y); // This calculates grid coordinates based on the drag
   });
   // mouseup
   canvas?.addEventListener("mouseup", (e) => {

@@ -10,16 +10,19 @@ function drawCoordinateGrid(
   ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
   ctx.lineWidth = 1;
 
-  const startX = dragDelta.x % SIZE;
-  const startY = dragDelta.y % SIZE;
+  const centerX = container.clientWidth / 2;
+  const centerY = container.clientHeight / 2;
+
+  const startX = (centerX + dragDelta.x) % SIZE;
+  const startY = (centerY + dragDelta.y) % SIZE;
 
   for (let i = startX; i < container.clientWidth; i += SIZE) {
     ctx.moveTo(i, 0);
     ctx.lineTo(i, container.clientHeight);
-    // draw text coordinates]
+    // draw text coordinates
     ctx.font = "10px Arial";
     ctx.fillStyle = "white";
-    ctx.fillText((i - dragDelta.x).toString(), i, 10);
+    ctx.fillText((i - centerX - dragDelta.x).toString(), i, 10);
   }
   for (let i = startY; i < container.clientHeight; i += SIZE) {
     ctx.moveTo(0, i);
@@ -27,7 +30,7 @@ function drawCoordinateGrid(
     // draw text coordinates
     ctx.font = "10px Arial";
     ctx.fillStyle = "white";
-    ctx.fillText((i - dragDelta.y).toString(), 0, i);
+    ctx.fillText((i - centerY - dragDelta.y).toString(), 0, i);
   }
   ctx.stroke();
   ctx.closePath();
