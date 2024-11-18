@@ -2,14 +2,14 @@
 import { nextTick, onMounted, ref } from "vue";
 import { drawCoordinateGrid } from "@/utils/universe";
 const FRAMERATE = 144;
-var container = ref<HTMLElement | null>(null);
-var canvas: HTMLCanvasElement | null;
-var ctx: CanvasRenderingContext2D | null;
-var zoom = 1;
-var dragging = false;
-var dragStart = { x: 0, y: 0 };
-var dragEnd = { x: 0, y: 0 };
-var dragDelta = { x: 0, y: 0 };
+let container = ref<HTMLElement | null>(null);
+let canvas: HTMLCanvasElement | null;
+let ctx: CanvasRenderingContext2D | null;
+let zoom = 1;
+let dragging = false;
+let dragStart = { x: 0, y: 0 };
+let dragEnd = { x: 0, y: 0 };
+let dragDelta = { x: 0, y: 0 };
 
 onMounted(async () => {
   // When the component is mounted, initialize the container and canvas
